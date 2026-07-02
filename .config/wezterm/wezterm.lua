@@ -26,8 +26,21 @@ end
 if is_macos then
   config.window_background_opacity = 0.8
   config.macos_window_background_blur = 50
-  config.font_size = 15.0
+
+  -- Font
+  config.font_size = 19.0
+  config.line_height = 1.2
   config.window_frame.font_size = 13.0
+
+  -- Colors
+  config.colors = {
+    cursor_bg = "white",
+    cursor_border = "white",
+  }
+
+  -- Appearance
+  config.window_decorations = "RESIZE"
+  config.hide_tab_bar_if_only_one_tab = true
 end
 
 return config
