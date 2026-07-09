@@ -1,40 +1,39 @@
-# dotfiles
+# 🚀 Dotfiles
 
-Personal configuration files for terminal tools.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![macOS](https://img.shields.io/badge/os-macOS-green.svg?logo=apple)]()
+[![WezTerm](https://img.shields.io/badge/Terminal-WezTerm-blue?logo=alacritty)]()
+[![Tmux](https://img.shields.io/badge/Multiplexer-Tmux-1ABB9C?logo=tmux)]()
 
-## Contents
+A curated set of personal configuration files for an optimized, aesthetically pleasing, and highly productive terminal experience.
 
-- `.tmux.conf` — tmux configuration
-- `.config/wezterm/wezterm.lua` — WezTerm terminal emulator configuration
+## ✨ Features
 
-## tmux shortcuts
+- **Terminal Emulator:** [WezTerm](https://wezfurlong.org/wezterm/) - GPU-accelerated cross-platform terminal emulator and multiplexer.
+- **Terminal Multiplexer:** [tmux](https://github.com/tmux/tmux) - Customized for ease of use with intuitive keybindings and mouse support.
+- **Shell Enhancements:** Zsh with `powerlevel10k` theme, `zsh-autosuggestions`, and `zsh-syntax-highlighting`.
+- **Modern Utilities:** `eza` (modern replacement for `ls`) and `zoxide` (smarter `cd` command).
 
-Prefix key is remapped to `Ctrl-a`.
+---
 
-| Shortcut | Action |
-| --- | --- |
-| `tmux new -s <name>` | Create a new named session |
-| `tmux attach -t <name>` | Attach to a session |
-| `tmux kill-session -t <name>` | Kill a session |
-| `Ctrl-a` | Prefix key |
-| `Prefix + \|` | Split pane vertically |
-| `Prefix + -` | Split pane horizontally |
-| `Prefix + ←` | Move to pane on the left |
-| `Prefix + ↓` | Move to pane below |
-| `Prefix + ↑` | Move to pane above |
-| `Prefix + →` | Move to pane on the right |
-| `Prefix + r` | Reload tmux config |
-| `Prefix + c` | Create new window |
-| `Prefix + d` | Detach from session |
-| `Prefix + x` | Kill current pane |
-| `Prefix + k` | Kill current window |
-| Mouse | Resize/select panes, scroll |
+## 🛠️ Installation
 
-## Usage
+The provided `install.sh` script will automatically install Homebrew (if not present), all necessary packages and fonts, symlink the dotfiles to your home directory, and set Zsh as your default shell.
 
-Clone this repository and symlink the files into your home directory:
+Simply clone the repository and run the install script:
 
 ```sh
-cp "$(pwd)/.tmux.conf" ~/.tmux.conf
-cp -r "$(pwd)/.config/wezterm" ~/.config/wezterm
+# Clone the repository
+git clone https://github.com/Abhishekojha38/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+
+# Run the installation script
+chmod +x install.sh
+./install.sh
 ```
+
+---
+
+## 📄 License
+
+This project is open source and available under the MIT License.
