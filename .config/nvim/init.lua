@@ -1,1 +1,1 @@
-require('vim_config')
+require('abhio.core')
