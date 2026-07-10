@@ -26,6 +26,15 @@ o.splitbelow = true
 o.updatetime = 50
 o.colorcolumn = "80"
 o.hlsearch = true
-
 o.mouse = "a"
 vim.g.editorconfig = true
+o.list = true
+o.listchars = {
+  tab = '» ',       -- Displays for tabs (must be 2 characters)
+  space = '·',      -- Displays for regular spaces
+  multispace = '·', -- Displays for consecutive spaces
+  lead = '·',       -- Displays for leading spaces
+  trail = '•',      -- Displays for trailing spaces
+  nbsp = '␣',       -- Displays for non-breaking spaces
+}
+
