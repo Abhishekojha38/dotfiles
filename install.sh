@@ -34,6 +34,7 @@ brew install eza
 brew install zoxide
 brew install fzf
 brew install tmux
+brew install neovim
 
 # 4. Deploy Configurations
 echo "🔗 Deploying dotfiles..."
