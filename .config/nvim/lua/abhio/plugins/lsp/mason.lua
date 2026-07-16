@@ -23,17 +23,10 @@ return {
 
     mason_lspconfig.setup({
       -- list of servers for mason to install
+      -- (kept minimal: clangd for C/C++/kernel work, lua_ls for this config)
       ensure_installed = {
-        "tsserver",
-        "html",
-        "cssls",
-        "tailwindcss",
-        "svelte",
+        "clangd",
         "lua_ls",
-        "graphql",
-        "emmet_ls",
-        "prismals",
-        "pyright",
       },
     })
   end,
