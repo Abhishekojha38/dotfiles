@@ -14,7 +14,7 @@ A curated set of personal configuration files for an optimized, aesthetically pl
 - **Terminal Multiplexer:** [tmux](https://github.com/tmux/tmux) - Customized for ease of use with intuitive keybindings and mouse support.
 - **Text Editor:** [Neovim](https://neovim.io/) - Hyperextensible Vim-based text editor.
 - **Shell Enhancements:** Zsh with `powerlevel10k` theme, `zsh-autosuggestions`, and `zsh-syntax-highlighting`.
-- **Modern Utilities:** `eza` (modern replacement for `ls`), `zoxide` (smarter `cd` command), and `fzf` (command-line fuzzy finder).
+- **Modern Utilities:** `eza` (modern replacement for `ls`), `zoxide` (smarter `cd` command), `fzf` (command-line fuzzy finder), and `herdr`.
 
 ---
 

@@ -35,6 +35,7 @@ brew install zoxide
 brew install fzf
 brew install tmux
 brew install neovim
+brew install herdr
 
 # 4. Deploy Configurations
 echo "🔗 Deploying dotfiles..."
