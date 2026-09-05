@@ -1,0 +1,36 @@
+# The work tree for this repository is $HOME, so everything in the home
+# directory is a candidate for tracking. Default to ignoring, and allow only
+# what is deliberately versioned.
+
+# macOS
+.DS_Store
+
+# Credentials and secrets. Never track these.
+.ssh/
+.aws/
+.gnupg/
+.netrc
+.env
+.claude.json
+*.pem
+*.key
+
+# Claude Code: ignore the whole directory, then allow tracked config back in.
+.claude/*
+!.claude/CLAUDE.md
+!.claude/settings.json
+!.claude/statusline.sh
+!.claude/agents/
+!.claude/commands/
+!.claude/skills/
+
+# GitHub Copilot CLI: same approach.
+.copilot/*
+!.copilot/copilot-instructions.md
+!.copilot/agents/
+!.copilot/skills/
+!.copilot/instructions/
+
+# Logs and local overrides anywhere
+*.log
+settings.local.json
