@@ -107,6 +107,27 @@ config remote add origin git@github.com:Abhishekojha38/dotfiles.git
 config push -u origin main
 ```
 
+### What installs what
+
+The two halves are deliberately separate.
+
+| File | Responsibility |
+| ---- | -------------- |
+| `config checkout` | Every configuration file, placed directly in `$HOME` |
+| `Brewfile` | Every package, declaratively; run with `brew bundle` |
+| `install.sh` | Installs Homebrew, runs `brew bundle`, sets the login shell |
+
+`install.sh` deploys nothing.
+Adding a package means editing `Brewfile`, not editing a script, and
+`brew bundle` is idempotent so re-running it is safe.
+`brew bundle dump --force` regenerates a superset of the file from whatever
+is currently installed, which is useful when you want to capture a machine
+you have been tinkering with.
+
+The Brewfile includes both agent CLIs, `claude-code` and `copilot-cli`,
+because this repository checks configuration into `~/.claude` and
+`~/.copilot` and that configuration is inert without the tools that read it.
+
 ### Daily use
 
 ```sh
@@ -200,7 +221,7 @@ Every path is where it lands in `$HOME` after checkout.
   copilot-instructions.md -> ../AGENTS.md   (committed symlink)
   agents/  skills/  instructions/
 ~/.config/                           nvim, wezterm, herdr
-~/.zshrc  ~/.tmux.conf  ~/install.sh
+~/.zshrc  ~/.tmux.conf  ~/Brewfile  ~/install.sh
 ```
 
 Both tools also write session state, logs and credentials into `~/.claude`
