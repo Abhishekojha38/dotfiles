@@ -37,19 +37,9 @@ brew install tmux
 brew install neovim
 brew install herdr
 
-# 4. Deploy Configurations
-echo "🔗 Deploying dotfiles..."
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-echo "Symlinking .tmux.conf..."
-ln -sf "$DOTFILES_DIR/.tmux.conf" "$HOME/.tmux.conf"
-
-echo "Symlinking .zshrc..."
-ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
-
-echo "Symlinking WezTerm config..."
-mkdir -p "$HOME/.config/wezterm"
-ln -sf "$DOTFILES_DIR/.config/wezterm/"* "$HOME/.config/wezterm/"
+# 4. Configuration is already in place
+# This repository is checked out with $HOME as its work tree, so every tracked
+# file already sits where the tool that reads it looks. Nothing to symlink.
 
 # 5. Set Zsh as default shell
 BREW_ZSH="$(brew --prefix)/bin/zsh"
