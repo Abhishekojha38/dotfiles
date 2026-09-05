@@ -20,19 +20,90 @@ A curated set of personal configuration files for an optimized, aesthetically pl
 
 ## 🛠️ Installation
 
-The provided `install.sh` script will automatically install Homebrew (if not present), all necessary packages and fonts, symlink the dotfiles to your home directory, and set Zsh as your default shell.
+This repository is a bare Git repository whose work tree is your home
+directory.
+There are no symlinks and no deploy step: a checkout puts every file exactly
+where the tool that reads it expects to find it.
 
-Simply clone the repository and run the install script:
+### On a new machine
+
+Run these in order. Each block is self-contained and safe to paste as is.
+
+**1. Clone as a bare repository.**
 
 ```sh
-# Clone the repository
-git clone https://github.com/Abhishekojha38/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-
-# Run the installation script
-chmod +x install.sh
-./install.sh
+git clone --bare https://github.com/Abhishekojha38/dotfiles.git "$HOME/dotfiles"
 ```
+
+**2. Define the `dotfiles` command for this shell.**
+
+```sh
+dotfiles() { git --git-dir="$HOME/dotfiles" --work-tree="$HOME" "$@"; }
+```
+
+**3. Check the files out into `$HOME`.**
+
+Anything already in the way is moved to `~/.dotfiles-backup/` first, keeping
+its original sub-path, so nothing is lost and the checkout can succeed.
+
+```sh
+dotfiles checkout 2>&1 | awk '/^\t/ { sub(/^\t/, ""); print }' | while read -r f; do
+  mkdir -p "$HOME/.dotfiles-backup/$(dirname "$f")"
+  mv "$HOME/$f" "$HOME/.dotfiles-backup/$f"
+done
+
+dotfiles checkout
+```
+
+**4. Stop `dotfiles status` from listing your entire home directory.**
+
+```sh
+dotfiles config --local status.showUntrackedFiles no
+```
+
+**5. Install the packages and set the login shell.**
+
+```sh
+chmod +x "$HOME/install.sh" && "$HOME/install.sh"
+```
+
+**6. Restart the shell.**
+
+`.zshrc` defines `dotfiles` permanently, so it is available from now on.
+
+```sh
+exec zsh
+```
+
+### All steps at once
+
+```sh
+git clone --bare https://github.com/Abhishekojha38/dotfiles.git "$HOME/dotfiles"
+dotfiles() { git --git-dir="$HOME/dotfiles" --work-tree="$HOME" "$@"; }
+
+dotfiles checkout 2>&1 | awk '/^\t/ { sub(/^\t/, ""); print }' | while read -r f; do
+  mkdir -p "$HOME/.dotfiles-backup/$(dirname "$f")"
+  mv "$HOME/$f" "$HOME/.dotfiles-backup/$f"
+done
+
+dotfiles checkout
+dotfiles config --local status.showUntrackedFiles no
+chmod +x "$HOME/install.sh" && "$HOME/install.sh"
+exec zsh
+```
+
+### Daily use
+
+```sh
+dotfiles status
+dotfiles add .claude/agents/reviewer.md
+dotfiles commit -m "add reviewer agent"
+dotfiles push
+```
+
+`.gitignore` is written to ignore first and allow only what is deliberately
+tracked, so credentials and agent session state stay out even if you run
+`dotfiles add -A`.
 
 ---
 
