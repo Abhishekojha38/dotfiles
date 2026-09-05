@@ -38,3 +38,7 @@ alias cd="z"
 
 # Set up fzf key bindings and fuzzy completion
 eval "$(fzf --zsh)"
+
+# ---- Dotfiles (bare repo, work tree is $HOME) ----
+# Manage tracked config from anywhere, e.g. `dotfiles status`, `dotfiles add`.
+dotfiles() { git --git-dir="$HOME/dotfiles" --work-tree="$HOME" "$@"; }
