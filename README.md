@@ -23,11 +23,45 @@ A curated set of personal configuration files for an optimized, aesthetically pl
 
 The provisioning script supports macOS, Ubuntu, and Debian.
 
-### From a regular clone
+### Using git --work-tree approach
 
-Use this method when the repository already exists outside your home directory.
-Existing managed files are moved to a timestamped `~/.dotfiles-backup/`
-directory before deployment.
+Use this when the repository is already cloned outside your home directory, as
+in `~/Projects/dotfiles`.
+
+**Make `$HOME` the work tree of a bare repository.**
+
+Nothing is copied.
+`$HOME` becomes the work tree of a bare repository whose Git directory is
+`~/.dotfiles`, so the file you edit in your home directory is the file Git
+tracks, with no second copy to keep in sync.
+Run this from inside the clone.
+
+```sh
+git clone --bare --branch main "$PWD" "$HOME/.dotfiles"
+git --git-dir="$HOME/.dotfiles" remote set-url origin \
+  https://github.com/Abhishekojha38/dotfiles.git
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+dotfiles config --local status.showUntrackedFiles no
+
+BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+dotfiles checkout 2>&1 | awk '/^\t/ { sub(/^\t/, ""); print }' | while read -r f; do
+  mkdir -p "$BACKUP/$(dirname "$f")"
+  mv "$HOME/$f" "$BACKUP/$f"
+done
+
+dotfiles checkout
+chmod +x "$HOME/install.sh" && "$HOME/install.sh"
+exec zsh
+```
+
+The `remote set-url` line matters.
+Cloning from a local path leaves `origin` pointing at that path, so without it
+`dotfiles push` would push into your own clone instead of to GitHub.
+
+After this the clone is no longer needed for configuration changes.
+Edit files in `$HOME` and commit them with `dotfiles`.
+
+**Alternative: copy the files into place.**
 
 ```sh
 ./deploy.sh
@@ -35,13 +69,14 @@ directory before deployment.
 exec zsh
 ```
 
-`deploy.sh` copies the configuration into the paths where each tool expects it.
-`install.sh` installs packages and changes the login shell.
+`deploy.sh` copies each managed path to where its tool expects it, moving
+anything already there into a timestamped `~/.dotfiles-backup/` directory.
+Use it only when you do not want a bare repository in your home directory.
+It leaves two copies of every file, and a change you make in `$HOME` afterwards
+is invisible to the clone.
 
-The original workflow uses a bare Git repository whose work tree is your home
-directory.
-That workflow has no deploy step: a checkout puts every file exactly where the
-tool that reads it expects to find it.
+The next section sets up the same bare repository on a machine that has no
+clone yet, pulling straight from GitHub.
 
 ### Bare repository on a new machine
 
@@ -96,37 +131,19 @@ on.
 exec zsh
 ```
 
-### All steps at once
+### Daily use
 
 ```sh
-git clone --bare https://github.com/Abhishekojha38/dotfiles.git "$HOME/.dotfiles"
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
-BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
-dotfiles checkout 2>&1 | awk '/^\t/ { sub(/^\t/, ""); print }' | while read -r f; do
-  mkdir -p "$BACKUP/$(dirname "$f")"
-  mv "$HOME/$f" "$BACKUP/$f"
-done
-
-dotfiles checkout
-dotfiles config --local status.showUntrackedFiles no
-chmod +x "$HOME/install.sh" && "$HOME/install.sh"
-exec zsh
+dotfiles status
+dotfiles add .claude/agents/reviewer.md
+dotfiles commit -m "add reviewer agent"
+dotfiles push
 ```
 
-### Starting from scratch instead
-
-If you are creating the repository rather than cloning it:
-
-```sh
-git init --bare "$HOME/.dotfiles"
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-dotfiles config --local status.showUntrackedFiles no
-dotfiles add .zshrc
-dotfiles commit -m "add zsh profile"
-dotfiles remote add origin git@github.com:Abhishekojha38/dotfiles.git
-dotfiles push -u origin main
-```
+Stage files explicitly, one path at a time.
+`dotfiles add -A` in a home directory work tree would sweep in anything
+untracked that sits there, so `.gitignore` stays short and the discipline
+does the work.
 
 ### What installs what
 
@@ -158,20 +175,6 @@ APT names Debian's `fd` binary `fdfind`, so the script also links it to `fd` in
 The Brewfile includes both agent CLIs, `claude-code` and `copilot-cli`,
 because this repository checks configuration into `~/.claude` and
 `~/.copilot` and that configuration is inert without the tools that read it.
-
-### Daily use
-
-```sh
-dotfiles status
-dotfiles add .claude/agents/reviewer.md
-dotfiles commit -m "add reviewer agent"
-dotfiles push
-```
-
-Stage files explicitly, one path at a time.
-`dotfiles add -A` in a home directory work tree would sweep in anything
-untracked that sits there, so `.gitignore` stays short and the discipline
-does the work.
 
 ## 🤖 Agent Configuration
 
