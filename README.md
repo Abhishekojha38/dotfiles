@@ -20,12 +20,27 @@ A curated set of personal configuration files for an optimized, aesthetically pl
 
 ## 🛠️ Installation
 
-This repository is a bare Git repository whose work tree is your home
-directory.
-There are no symlinks and no deploy step: a checkout puts every file exactly
-where the tool that reads it expects to find it.
+### From a regular clone
 
-### On a new machine
+Use this method when the repository already exists outside your home directory.
+Existing managed files are moved to a timestamped `~/.dotfiles-backup/`
+directory before deployment.
+
+```sh
+./deploy.sh
+./install.sh
+exec zsh
+```
+
+`deploy.sh` copies the configuration into the paths where each tool expects it.
+`install.sh` installs packages and changes the login shell.
+
+The original workflow uses a bare Git repository whose work tree is your home
+directory.
+That workflow has no deploy step: a checkout puts every file exactly where the
+tool that reads it expects to find it.
+
+### Bare repository on a new machine
 
 Run these in order. Each block is self-contained and safe to paste as is.
 
@@ -114,6 +129,7 @@ The two halves are deliberately separate.
 | File | Responsibility |
 | ---- | -------------- |
 | `config checkout` | Every configuration file, placed directly in `$HOME` |
+| `deploy.sh` | Safely deploys configuration from a regular clone |
 | `Brewfile` | Every package, declaratively; run with `brew bundle` |
 | `install.sh` | Installs Homebrew, runs `brew bundle`, sets the login shell |
 
