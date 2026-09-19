@@ -79,5 +79,5 @@ unset BREW_PREFIX
 unfunction source_first_available
 
 # ---- Dotfiles (bare repo, work tree is $HOME) ----
-# Manage tracked config from anywhere, e.g. `config status`, `config add`.
-alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+# Manage tracked config from anywhere, e.g. `dotfiles status`, `dotfiles add`.
+alias dotfiles='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'

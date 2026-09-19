@@ -50,33 +50,35 @@ Run these in order. Each block is self-contained and safe to paste as is.
 **1. Clone as a bare repository.**
 
 ```sh
-git clone --bare https://github.com/Abhishekojha38/dotfiles.git "$HOME/.cfg"
+git clone --bare https://github.com/Abhishekojha38/dotfiles.git "$HOME/.dotfiles"
 ```
 
-**2. Define the `config` alias for this shell.**
+**2. Define the `dotfiles` alias for this shell.**
 
 ```sh
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 ```
 
 **3. Check the files out into `$HOME`.**
 
-Anything already in the way is moved to `~/.cfg-backup/` first, keeping its
-original sub-path, so nothing is lost and the checkout can succeed.
+Anything already in the way is moved to a timestamped `~/.dotfiles-backup/`
+directory first, keeping its original sub-path, so nothing is lost and the
+checkout can succeed.
 
 ```sh
-config checkout 2>&1 | awk '/^\t/ { sub(/^\t/, ""); print }' | while read -r f; do
-  mkdir -p "$HOME/.cfg-backup/$(dirname "$f")"
-  mv "$HOME/$f" "$HOME/.cfg-backup/$f"
+BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+dotfiles checkout 2>&1 | awk '/^\t/ { sub(/^\t/, ""); print }' | while read -r f; do
+  mkdir -p "$BACKUP/$(dirname "$f")"
+  mv "$HOME/$f" "$BACKUP/$f"
 done
 
-config checkout
+dotfiles checkout
 ```
 
-**4. Stop `config status` from listing your entire home directory.**
+**4. Stop `dotfiles status` from listing your entire home directory.**
 
 ```sh
-config config --local status.showUntrackedFiles no
+dotfiles config --local status.showUntrackedFiles no
 ```
 
 **5. Install the packages and set the login shell.**
@@ -87,7 +89,7 @@ chmod +x "$HOME/install.sh" && "$HOME/install.sh"
 
 **6. Restart the shell.**
 
-`.zshrc` defines the `config` alias permanently, so it is available from now
+`.zshrc` defines the `dotfiles` alias permanently, so it is available from now
 on.
 
 ```sh
@@ -97,16 +99,17 @@ exec zsh
 ### All steps at once
 
 ```sh
-git clone --bare https://github.com/Abhishekojha38/dotfiles.git "$HOME/.cfg"
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+git clone --bare https://github.com/Abhishekojha38/dotfiles.git "$HOME/.dotfiles"
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
-config checkout 2>&1 | awk '/^\t/ { sub(/^\t/, ""); print }' | while read -r f; do
-  mkdir -p "$HOME/.cfg-backup/$(dirname "$f")"
-  mv "$HOME/$f" "$HOME/.cfg-backup/$f"
+BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+dotfiles checkout 2>&1 | awk '/^\t/ { sub(/^\t/, ""); print }' | while read -r f; do
+  mkdir -p "$BACKUP/$(dirname "$f")"
+  mv "$HOME/$f" "$BACKUP/$f"
 done
 
-config checkout
-config config --local status.showUntrackedFiles no
+dotfiles checkout
+dotfiles config --local status.showUntrackedFiles no
 chmod +x "$HOME/install.sh" && "$HOME/install.sh"
 exec zsh
 ```
@@ -116,13 +119,13 @@ exec zsh
 If you are creating the repository rather than cloning it:
 
 ```sh
-git init --bare "$HOME/.cfg"
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-config config --local status.showUntrackedFiles no
-config add .zshrc
-config commit -m "add zsh profile"
-config remote add origin git@github.com:Abhishekojha38/dotfiles.git
-config push -u origin main
+git init --bare "$HOME/.dotfiles"
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+dotfiles config --local status.showUntrackedFiles no
+dotfiles add .zshrc
+dotfiles commit -m "add zsh profile"
+dotfiles remote add origin git@github.com:Abhishekojha38/dotfiles.git
+dotfiles push -u origin main
 ```
 
 ### What installs what
@@ -131,7 +134,7 @@ The two halves are deliberately separate.
 
 | File | Responsibility |
 | ---- | -------------- |
-| `config checkout` | Every configuration file, placed directly in `$HOME` |
+| `dotfiles checkout` | Every configuration file, placed directly in `$HOME` |
 | `deploy.sh` | Safely deploys configuration from a regular clone |
 | `Brewfile` | Packages installed on macOS |
 | `packages/ubuntu.txt` | Packages installed on Ubuntu and Debian |
@@ -159,14 +162,14 @@ because this repository checks configuration into `~/.claude` and
 ### Daily use
 
 ```sh
-config status
-config add .claude/agents/reviewer.md
-config commit -m "add reviewer agent"
-config push
+dotfiles status
+dotfiles add .claude/agents/reviewer.md
+dotfiles commit -m "add reviewer agent"
+dotfiles push
 ```
 
 Stage files explicitly, one path at a time.
-`config add -A` in a home directory work tree would sweep in anything
+`dotfiles add -A` in a home directory work tree would sweep in anything
 untracked that sits there, so `.gitignore` stays short and the discipline
 does the work.
 

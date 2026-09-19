@@ -1,12 +1,12 @@
 # The work tree is $HOME. Files are staged explicitly, so this stays short.
 
 # The bare repository sits inside its own work tree. Git only auto-excludes a
-# .git directory, so without this rule `config add -A` stages every git object
+# .git directory, so without this rule `dotfiles add -A` stages every git object
 # back into the repository.
-/.cfg/
+/.dotfiles/
 
 # Copies of the configuration this repository replaced during checkout.
-/.cfg-backup/
+/.dotfiles-backup/
 
 # macOS
 .DS_Store
