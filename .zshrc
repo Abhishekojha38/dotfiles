@@ -5,12 +5,33 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+export PATH="$HOME/.local/bin:$PATH"
+
+source_first_available() {
+  local candidate
+  for candidate in "$@"; do
+    if [[ -r "$candidate" ]]; then
+      source "$candidate"
+      return
+    fi
+  done
+}
+
+if command -v brew >/dev/null 2>&1; then
+  BREW_PREFIX="$(brew --prefix)"
+else
+  BREW_PREFIX=""
+fi
+
+source_first_available \
+  "${XDG_DATA_HOME:-$HOME/.local/share}/powerlevel10k/powerlevel10k.zsh-theme" \
+  "${BREW_PREFIX:+$BREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme}"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source_first_available \
+  "${BREW_PREFIX:+$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh}" \
+  /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # history setup
 HISTFILE=$HOME/.zhistory
@@ -27,18 +48,36 @@ bindkey '^[[B' history-search-forward
 
 # ---- Eza (better ls) -----
 
-alias ls="eza --icons=always"
+if command -v eza >/dev/null 2>&1; then
+  alias ls="eza --icons=always"
+fi
 
 # ---- Zoxide (better cd) ----
-eval "$(zoxide init zsh)"
-
-alias cd="z"
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias cd="z"
+fi
 
 # ---- FZF -----
 
 # Set up fzf key bindings and fuzzy completion
-eval "$(fzf --zsh)"
+if command -v fzf >/dev/null 2>&1; then
+  if FZF_ZSH_INIT="$(fzf --zsh 2>/dev/null)"; then
+    eval "$FZF_ZSH_INIT"
+  else
+    source_first_available /usr/share/doc/fzf/examples/key-bindings.zsh
+    source_first_available /usr/share/doc/fzf/examples/completion.zsh
+  fi
+  unset FZF_ZSH_INIT
+fi
+
+source_first_available \
+  "${BREW_PREFIX:+$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh}" \
+  /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+unset BREW_PREFIX
+unfunction source_first_available
 
 # ---- Dotfiles (bare repo, work tree is $HOME) ----
 # Manage tracked config from anywhere, e.g. `config status`, `config add`.
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'

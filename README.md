@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/os-macOS-green.svg?logo=apple)]()
+![Linux](https://img.shields.io/badge/os-Linux-orange.svg)
 [![WezTerm](https://img.shields.io/badge/Terminal-WezTerm-blue?logo=alacritty)]()
 [![Tmux](https://img.shields.io/badge/Multiplexer-Tmux-1ABB9C?logo=tmux)]()
 [![Neovim](https://img.shields.io/badge/Editor-Neovim-57A143?logo=neovim)]()
@@ -19,6 +20,8 @@ A curated set of personal configuration files for an optimized, aesthetically pl
 ---
 
 ## 🛠️ Installation
+
+The provisioning script supports macOS, Ubuntu, and Debian.
 
 ### From a regular clone
 
@@ -130,15 +133,24 @@ The two halves are deliberately separate.
 | ---- | -------------- |
 | `config checkout` | Every configuration file, placed directly in `$HOME` |
 | `deploy.sh` | Safely deploys configuration from a regular clone |
-| `Brewfile` | Every package, declaratively; run with `brew bundle` |
-| `install.sh` | Installs Homebrew, runs `brew bundle`, sets the login shell |
+| `Brewfile` | Packages installed on macOS |
+| `packages/ubuntu.txt` | Packages installed on Ubuntu and Debian |
+| `install.sh` | Provisions packages and sets the login shell |
 
 `install.sh` deploys nothing.
-Adding a package means editing `Brewfile`, not editing a script, and
-`brew bundle` is idempotent so re-running it is safe.
+Adding a package means editing the manifest for the relevant operating system.
+The package-manager operations are idempotent, so re-running the script is safe.
 `brew bundle dump --force` regenerates a superset of the file from whatever
 is currently installed, which is useful when you want to capture a machine
 you have been tinkering with.
+
+On Linux, the script uses APT for system packages.
+It installs current releases of Neovim, eza, Powerlevel10k, Hack Nerd Font,
+WezTerm, Herdr, Claude Code, and GitHub Copilot CLI from their upstream
+distributions, because APT either lags too far behind or does not package them
+at all.
+APT names Debian's `fd` binary `fdfind`, so the script also links it to `fd` in
+`~/.local/bin`, which is where Neovim plugins look for it.
 
 The Brewfile includes both agent CLIs, `claude-code` and `copilot-cli`,
 because this repository checks configuration into `~/.claude` and

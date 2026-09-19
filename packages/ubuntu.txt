@@ -1,0 +1,25 @@
+# Shell
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
+
+# Terminal and multiplexer
+tmux
+
+# Modern CLI utilities
+zoxide
+fzf
+ripgrep
+fd-find
+wl-clipboard
+xclip
+
+# Installer and Neovim build dependencies
+ca-certificates
+curl
+fontconfig
+git
+gnupg
+tar
+unzip
+build-essential
