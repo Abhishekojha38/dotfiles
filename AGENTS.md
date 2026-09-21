@@ -11,6 +11,7 @@ These are common instructions for Abhishek's agents across all scenarios.
 - When making technical decisions, do not give much weight to development cost.
 - When doing a bug fixes, always start with reproducing the bug in an End to End setting as closely aligned with how an end user would experiance it as possible. This make sure you find the real problem so your fix will actually solve it.
 - Prefer quality, simplicity, robustness, scalability, and long term maintainability, when makeing technical decisions and implementations.
+- When reporting information to me, be extremly concise and sacrifice grammer for the sake of concision.
 
 # When stuck
 - ask a clarifying question, propose a short plan, or open a draft PR with notes.
