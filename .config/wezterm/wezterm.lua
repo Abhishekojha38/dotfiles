@@ -28,9 +28,9 @@ if is_macos then
   config.macos_window_background_blur = 50
 
   -- Font
-  config.font_size = 10.0
+  config.font_size = 15.0
   config.line_height = 1.2
-  config.window_frame.font_size = 10.0
+  config.window_frame.font_size = 15.0
 
   -- Colors
   config.colors = {
